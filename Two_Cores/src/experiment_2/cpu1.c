@@ -7,7 +7,14 @@
 
 #define PROBE_ADDR 0x28208000 // A different address in shared RAM (NS_RAM)
 
+#define SPY_DUMP_COUNT 4096
+uint32_t spy_results[SPY_DUMP_COUNT];
 
+
+
+void interrupt_here(void){
+    return;
+}
 
 void main_cpu1(void)
 {
@@ -55,31 +62,39 @@ void main_cpu1(void)
     // }
     
     // sh_puts("retries: "); sh_putx(retries); sh_puts("\n");
-    
     for (int i = 0; i < ITERATIONS; i++)
     {
         uint32_t s = SYSTICK_VAL;
         shared_counter++;
         uint32_t e = SYSTICK_VAL;
-        uint32_t elapsed = systick_elapsed(s, e);
+        if (i < SPY_DUMP_COUNT) {
+            spy_results[i] = systick_elapsed(s, e);
+        }
 
-        if (elapsed < min_ticks) min_ticks = elapsed;
-        if (elapsed > max_ticks) max_ticks = elapsed;
-        total += elapsed;
-        if (elapsed > 10) contended++; // tune threshold after first run
+        // if (elapsed < min_ticks) min_ticks = elapsed;
+        // if (elapsed > max_ticks) max_ticks = elapsed;
+        // total += elapsed;
+        // if (elapsed > 10) contended++; // tune threshold after first run
     }
 
-    sh_puts("min    : "); sh_putx(min_ticks); sh_puts("\n");
-    sh_puts("max    : "); sh_putx(max_ticks); sh_puts("\n");
-    sh_puts("total  : "); sh_putx(total);     sh_puts("\n");
-    sh_puts("avg    : "); sh_putx(total / ITERATIONS); sh_puts("\n");
-    sh_puts("contended: "); sh_putx(contended); sh_puts("\n");
+    // sh_puts("min    : "); sh_putx(min_ticks); sh_puts("\n");
+    // sh_puts("max    : "); sh_putx(max_ticks); sh_puts("\n");
+    // sh_puts("total  : "); sh_putx(total);     sh_puts("\n");
+    // sh_puts("avg    : "); sh_putx(total / ITERATIONS); sh_puts("\n");
+    // sh_puts("contended: "); sh_putx(contended); sh_puts("\n");
        
     
-    sh_puts("cpu1 total ticks : "); sh_putx(total); sh_puts("\n");
+    // sh_puts("cpu1 total ticks : "); sh_putx(total); sh_puts("\n");
+    sh_puts("cpu1 done waiting for cpu0\n");
+    while (cpu0_running);
 
-
-
+    int i = 0;
+    while (i < SPY_DUMP_COUNT)
+    {
+        sh_putx(spy_results[i]);
+        sh_puts("\n");
+        i++;
+    }
 
  
 

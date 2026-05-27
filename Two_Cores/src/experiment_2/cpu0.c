@@ -11,7 +11,7 @@
 
 
 
-
+uint32_t secret_bit = 0;
 void main_cpu0(void)
 {
     sh_puts("- mpu setup()\n");
@@ -27,10 +27,19 @@ void main_cpu0(void)
     sh_puts("- cpu #0 running \n");
     while (!cpu1_running);
 
-    
     for (int i = 0; i < ITERATIONS; i++)
     {
-        shared_counter++;
+        if (secret_bit == 0)
+        {
+            __asm volatile ("nop\n nop\n nop\n nop");
+            secret_bit = 1;
+        }
+        else
+        {
+            __asm volatile ("nop\n nop\n nop\n nop");
+            secret_bit = 0;
+        }
+    
     }
 
     cpu0_running = false;

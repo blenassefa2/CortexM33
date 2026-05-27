@@ -7,8 +7,8 @@
 #include <stdbool.h>
 
 
-#define ITERATIONS 2000000 
-/* expected 4 000 000 =  0x3D0900 but kept getting 1EB4A0 when not using atomic */ 
+#define ITERATIONS 4100
+
 
 
 extern atomic_uint_fast32_t shared_counter;

@@ -1,6 +1,6 @@
 // systick.c
 
-#include "../../../include/platform/an521.h"
+
 #include "../../../include/timing/systick.h"
 
 void systick_init(void)

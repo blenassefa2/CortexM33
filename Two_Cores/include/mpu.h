@@ -2,6 +2,7 @@
 #define MPU_H
 
 #define CONFIGURED_SIZE 3
+#define ATTRIBUTE_SIZE 8
 
 #include <stdint.h>
 
@@ -51,6 +52,21 @@ struct device_attribute {
     uint32_t ignore2        : 4; // bit 4 - 7
 };
 
+enum device_attribute_type {
+    NGNRNE,
+    NGNRE,
+    NGRE,
+    GRE
+};
+
+enum normal_attribute_type {
+    NON_CACHEABLE,
+    CACHEABLE,
+    SHARED,
+    NON_SHARED,
+};
+
+
 struct rbar_s{
     uint32_t executable     :   1;  // bit 0      : (0) execution in this region allowed (1) not allowed
     uint32_t wr             :   2;  // bit 1 - 2  : (00) Read/write by privileged code only, (01) r/w by any level, (10)ro by privileged code only, (11) ro by any level
@@ -69,8 +85,31 @@ struct region {
     struct rlar_s limit;
 };
 
+struct attribute {
+    uint32_t all : 8;
+};
+
+extern struct region regions[CONFIGURED_SIZE];
 
 
+extern uint32_t mpu_attribute_count;
+extern uint32_t mpu_region_count;
+
+void mpu_load_default_configuration(void);
+
+void mpu_setup_start(void);
+void mpu_set_attribute(uint32_t idx, struct attribute *attr);
+void mpu_apply_attributes(uint32_t count);
+void mpu_set_region(uint32_t idx, struct rbar_s *base, struct rlar_s *limit);
+void mpu_apply_regions(uint32_t count);
+void mpu_set_base(uint32_t idx, uint32_t executable, uint32_t wr, uint32_t sharability, uint32_t base_address);
+void mpu_set_limit(uint32_t idx, uint32_t region_enable, uint32_t attr_indx, uint32_t limit_address);
+void mpu_setup_finish(void);
 void mpu_setup(void);
+uint32_t convert_a(struct attribute *attr);
 uint32_t convert_r(struct rlar_s *rl, struct rbar_s *rb);
+
+#ifdef MPU
+#include "mpu_armv8.h"
+#endif
 #endif /* MPU_H */
