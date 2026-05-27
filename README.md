@@ -10,20 +10,150 @@ This repository explores memory protection and side channels on ARM Cortex-M sys
 - Build reproducible experiments using open-source tooling
 
 
-## 🚀 Getting Started
+## Getting Started
 
 Clone the repository:
 
 ```bash
-git clone --recurse-submodules https://github.com/blenassefa2/CortexM_MPU_practice
+git clone  https://github.com/blenassefa2/CortexM_MPU_practice
 cd CortexM_MPU_practice
 ```
 
-Build and run an example:
+---
+
+### Selecting an Experiment
+
+Choose the experiment by editing the `EXPERIMENT` variable inside the `Makefile`.
+
+Example:
+
+```make
+EXPERIMENT ?= experiment_0
+```
+
+Or by specifying the experiment in each target command
+
+```bash
+make EXPERIMENT=ex_4_time
+```
+
+Available experiments:
+
+#### QEMU Experiments
+
+These run fully in QEMU:
+
+```text
+experiment_0
+experiment_1
+experiment_2
+```
+
+#### RP2040 Hardware Experiments
+
+These require a Raspberry Pi Pico (RP2040) and OpenOCD:
+
+```text
+ex_3_prime_probe
+ex_4_time
+ex_5_flush
+ex_6_flush_reload
+```
+
+---
+
+### QEMU Workflow
+
+Build the firmware:
 
 ```bash
 cd experiments/multicore
-make run
+make
+```
+
+Run in QEMU:
+
+```bash
+make qemu
+```
+
+Run in QEMU with GDB support:
+
+```bash
+make qemu_debug
+```
+
+Connect GDB:
+
+```bash
+make gdb
+```
+
+Run dual-core QEMU:
+
+```bash
+make qemu2cpu
+```
+
+---
+
+### RP2040 Hardware Workflow
+
+These experiments use:
+
+- Raspberry Pi Pico (RP2040)
+- CMSIS-DAP debug probe
+- OpenOCD
+- GDB
+
+Build the firmware:
+
+```bash
+make EXPERIMENT=ex_4_time
+```
+
+Flash firmware:
+
+```bash
+make flash
+```
+
+Start OpenOCD:
+
+```bash
+make ocd
+```
+
+Start GDB debugging session on another terminal:
+
+```bash
+make gdb-ocd
+```
+
+Dump spy results:
+
+```bash
+make dump-spy
+```
+
+Output files are stored in:
+
+```text
+result_analysis/data_output/
+```
+
+---
+
+### Cleaning
+
+```bash
+make clean
+```
+
+thorough cleaning
+
+```bash
+make EXPERIMENT=ex_4_... clean
 ```
 
 ##  Key Topics

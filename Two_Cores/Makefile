@@ -17,11 +17,17 @@ INCDIRS := -I./include -I./include/cmsis -I./include/fault -I./include/multicore
            -I./include/platform -I./include/timing -I./include/mpu
 
 # CPU selection (RP2040 experiment needs Cortex-M0+)
-CPU     = cortex-m0plus
+CPU     = cortex-m33
 ifeq ($(EXPERIMENT),ex_3_prime_probe)
 CPU = cortex-m0plus
 endif
 ifeq ($(EXPERIMENT),ex_4_time)
+CPU = cortex-m0plus
+endif
+ifeq ($(EXPERIMENT),ex_5_flush)
+CPU = cortex-m0plus
+endif
+ifeq ($(EXPERIMENT),ex_6_flush_reload)
 CPU = cortex-m0plus
 endif
 
@@ -140,33 +146,6 @@ dump-spy:
 	-ex "dump binary memory result_analysis/data_output/spy_results.bin spy_results spy_results+10" \
 	-ex "quit"
 
-dump-spy-exp2:
-	$(GDB) -q $(TARGET) \
-	-ex "set pagination off" \
-	-ex "set confirm off" \
-	-ex "target remote :1234" \
-	-ex "monitor halt" \
-	-ex "set logging file result_analysis/data_output/spy_results.txt" \
-	-ex "set logging overwrite on" \
-	-ex "set logging enabled on" \
-	-ex "p spy_results" \
-	-ex "set logging enabled off" \
-	-ex "dump binary memory result_analysis/data_output/spy_results.bin spy_results spy_results+2800" \
-	-ex "quit"
-
-# dump-spy-exp4:
-#     $(GDB) -q $(TARGET) \
-#     -ex "set pagination off" \
-#     -ex "set confirm off" 
-#     # -ex "target extended-remote :3333" \
-#     # -ex "monitor halt" \
-#     # -ex "set logging file result_analysis/data_output/spy_results.txt" \
-#     # -ex "set logging overwrite on" \
-#     # -ex "set logging enabled on" \
-#     # -ex "p spy_results" \
-#     # -ex "set logging enabled off" \
-#     # -ex "dump binary memory result_analysis/data_output/spy_results.bin spy_results spy_results+$(shell echo $$((ITERATIONS*4)))" \
-#     # -ex "quit"
 
 
 clean:
