@@ -146,7 +146,19 @@ dump-spy:
 	-ex "dump binary memory result_analysis/data_output/spy_results.bin spy_results spy_results+10" \
 	-ex "quit"
 
-
+dump_foo:
+	$(GDB) -q $(TARGET) \
+	-ex "set pagination off" \
+	-ex "set confirm off" \
+	-ex "set logging file result_analysis/data_output/spy_results.txt" \
+	-ex "set logging overwrite on" \
+	-ex "set logging enabled on" \
+	-ex "set print elements 0" \
+	-ex "target extended-remote :3333" \
+	-ex "p foo_time" \
+	-ex "set logging enabled off" \
+	-ex "dump binary memory result_analysis/data_output/spy_results.bin foo_time foo_time+10" \
+	-ex "quit"
 
 clean:
 	rm -f $(OBJS) $(TARGET) 

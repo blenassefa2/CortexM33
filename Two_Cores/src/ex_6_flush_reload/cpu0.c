@@ -2,6 +2,7 @@
 
 #include "../../include/multicore/multicore.h"
 #include <stdint.h>
+#include "../../include/shared.h"
 
 static uint32_t core1_stack[256];   // 256 × 4 = 1024 bytes
 
@@ -11,8 +12,8 @@ extern void core1_main(void);
 // vector table from linker
 extern uint32_t __Vectors[];
 
-#define REPEATS 4800
-#define SECRET 1600
+#define REPEATS 10000
+#define SECRET 6
 // since all of the code in this cpu0.c file is stored in the flash (forced by linker script),
 //  we'll be executing from flash and use XIP cache
 __attribute__((noinline, section(".victim_text")))   static uint32_t additional_block(uint32_t x) {
@@ -64,7 +65,7 @@ uint32_t single_disabled_iteration_time = - 1;
 
 
 void core0_main(void) {
-
+   
     int counter  = 0;
     for (int i = 0; i < REPEATS; i++){
        
@@ -93,10 +94,12 @@ void core0_main(void) {
 int main(void) {
 
     uint32_t stack_top = (uint32_t)(core1_stack + 256);
-
+    
     core1_launch(__Vectors, stack_top, core1_main);
     enable_xip_cache(); 
+  
     core0_main();
+   
     while (1);
 }
 

@@ -5,7 +5,7 @@
 
 
 
-#define  WAIT_WINDOW 1000
+#define  WAIT_WINDOW 10
 #define  SPY_TIME 4960
 
 #define THRESHOLD 7000
@@ -38,7 +38,7 @@ void core1_main(void)
     
     systick_init();
     
-    // atomic_store_explicit(&cpu1_running, true, memory_order_release);
+   
     int counter = 0;
     while(counter < SPY_TIME){
     
@@ -57,7 +57,7 @@ void core1_main(void)
     
     }
 
-    // atomic_store_explicit(&cpu1_running, false, memory_order_release);
+    atomic_store_explicit(&cpu1_running, false, memory_order_release);
    
     while (1);  // park core 1
 }
