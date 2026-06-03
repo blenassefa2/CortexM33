@@ -1,1 +1,0 @@
-rm -f src/common/fault/fault_handlers.o src/common/multicore/cpu_control.o src/common/multicore/multicore.o src/common/timing/systick.o src/common/timing/watchpoint_timer.o src/common/shared.o src/common/mpu/mpu_armv8m.o src/ex_6_flush_reload/cpu0.o src/ex_6_flush_reload/cpu1.o src/ex_6_flush_reload/0boot.o firmware.elf 
